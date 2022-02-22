@@ -1,0 +1,6 @@
+module Pods_drug_dose_calculator_drug_dose_calculatorTests {
+  umbrella header "Pods-drug_dose_calculator-drug_dose_calculatorTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
