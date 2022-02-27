@@ -11,16 +11,34 @@ import { windowHeight, windowWidth } from "./src/utils/Dimensions";
 const App = () => {
   const [result, setResult] = useState(0);
   const [calculation, setCalculation] = useState<any>("");
-  const operations = ["+", "-", "*", "/"];
+  const operations = ["+", "-", "×", "÷"];
 
   const updateCalc = (calc: string | number) => {
     if (calculation.split("").pop() == "%" && calc != "=") {
-      return setCalculation((prevState: any) => prevState + "*" + calc);
+      return setCalculation((prevState: any) => prevState + "×" + calc);
     }
     calc == "="
       ? calculateResult()
       : setCalculation((prevState: any) => prevState + calc);
   };
+
+  const formatCalc = () => {
+    let formatCalculation: string = calculation;
+    const isPercent = formatCalculation.indexOf("%");
+    const isMultiple = formatCalculation.indexOf("×");
+    const isDivision = formatCalculation.indexOf("÷");
+    if (isPercent != -1) {
+      formatCalculation = formatCalculation.replace(/%/gi, "/100");
+    }
+    if (isMultiple != -1) {
+      formatCalculation = formatCalculation.replace(/×/gi, "*");
+    }
+    if (isDivision != -1) {
+      formatCalculation = formatCalculation.replace(/÷/gi, "/");
+    }
+    return formatCalculation;
+  };
+
   const calculateResult = () => {
     if (!calculation) {
       return;
@@ -28,13 +46,7 @@ const App = () => {
     if (operations.includes(calculation.split("").pop())) {
       return;
     }
-    const isPercent = calculation.indexOf("%");
-
-    if (isPercent) {
-      const percentCalc = calculation.replace(/%/gi, "/100");
-      return setResult(new Function("return " + percentCalc)());
-    }
-    setResult(new Function("return " + calculation)());
+    setResult(new Function("return " + formatCalc())());
   };
 
   const updateOperation = (operation: string) => {
@@ -48,6 +60,10 @@ const App = () => {
         calculation.toString().substring(0, calculation.length - 1)
       );
     }
+    if (!calculation) {
+      return setCalculation((prevState: any) => prevState + "0" + operation);
+    }
+
     if (operations.includes(calculation.split("").pop())) {
       setCalculation((prestate: any) =>
         prestate.substring(0, calculation.length - 1)
@@ -83,10 +99,10 @@ const App = () => {
             <Text style={styles.wordText}>%</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => updateOperation("/")}
+            onPress={() => updateOperation("÷")}
             style={styles.btn}
           >
-            <Text style={styles.wordText}>/</Text>
+            <Text style={styles.wordText}>÷</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
@@ -100,10 +116,10 @@ const App = () => {
             <Text style={styles.btnText}>9</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => updateOperation("*")}
+            onPress={() => updateOperation("×")}
             style={styles.btn}
           >
-            <Text style={styles.wordText}>*</Text>
+            <Text style={styles.wordText}>×</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
