@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,85 +6,154 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
 import { windowHeight, windowWidth } from "./src/utils/Dimensions";
 
-const onPress = () => {
-  console.log("클릭이벤트 간소화");
-};
-
 const App = () => {
+  const [result, setResult] = useState(0);
+  const [calculation, setCalculation] = useState<any>("");
+  const operations = ["+", "-", "*", "/"];
+
+  const updateCalc = (calc: string | number) => {
+    if (calculation.split("").pop() == "%" && calc != "=") {
+      return setCalculation((prevState: any) => prevState + "*" + calc);
+    }
+    calc == "="
+      ? calculateResult()
+      : setCalculation((prevState: any) => prevState + calc);
+  };
+  const calculateResult = () => {
+    if (!calculation) {
+      return;
+    }
+    if (operations.includes(calculation.split("").pop())) {
+      return;
+    }
+    const isPercent = calculation.indexOf("%");
+
+    if (isPercent) {
+      const percentCalc = calculation.replace(/%/gi, "/100");
+      return setResult(new Function("return " + percentCalc)());
+    }
+    setResult(new Function("return " + calculation)());
+  };
+
+  const updateOperation = (operation: string) => {
+    if (operation == "AC") {
+      setResult(0);
+      setCalculation("");
+      return;
+    }
+    if (operation == "C") {
+      return setCalculation(
+        calculation.toString().substring(0, calculation.length - 1)
+      );
+    }
+    if (operations.includes(calculation.split("").pop())) {
+      setCalculation((prestate: any) =>
+        prestate.substring(0, calculation.length - 1)
+      );
+    }
+    setCalculation((prevState: any) => prevState + operation);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.valueBox}>
-        <Text style={styles.calcularText}>5 x 5</Text>
-        <Text style={styles.resultText}>25</Text>
+        <Text style={styles.calcularText}>{calculation}</Text>
+        <Text style={styles.resultText}>{result}</Text>
       </View>
       <View style={styles.btnBox}>
         <View style={styles.btnRow}>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation("AC")}
+            style={styles.btn}
+          >
             <Text style={styles.wordText}>AC</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
-            <Text style={styles.wordText}>( )</Text>
+          <TouchableOpacity
+            onPress={() => updateOperation("C")}
+            style={styles.btn}
+          >
+            <Text style={styles.wordText}>C</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation("%")}
+            style={styles.btn}
+          >
             <Text style={styles.wordText}>%</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
-            <Text style={styles.wordText}>÷</Text>
+          <TouchableOpacity
+            onPress={() => updateOperation("/")}
+            style={styles.btn}
+          >
+            <Text style={styles.wordText}>/</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(7)} style={styles.btn}>
             <Text style={styles.btnText}>7</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(8)} style={styles.btn}>
             <Text style={styles.btnText}>8</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(9)} style={styles.btn}>
             <Text style={styles.btnText}>9</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation("*")}
+            style={styles.btn}
+          >
             <Text style={styles.wordText}>*</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(4)} style={styles.btn}>
             <Text style={styles.btnText}>4</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(5)} style={styles.btn}>
             <Text style={styles.btnText}>5</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(6)} style={styles.btn}>
             <Text style={styles.btnText}>6</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation("-")}
+            style={styles.btn}
+          >
             <Text style={styles.wordText}>-</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(1)} style={styles.btn}>
             <Text style={styles.btnText}>1</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(2)} style={styles.btn}>
             <Text style={styles.btnText}>2</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc(3)} style={styles.btn}>
             <Text style={styles.btnText}>3</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation("+")}
+            style={styles.btn}
+          >
             <Text style={styles.wordText}>+</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity onPress={() => updateCalc("0")} style={styles.btn}>
             <Text style={styles.btnText}>0</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.btn}>
+          <TouchableOpacity
+            onPress={() => updateOperation(".")}
+            style={styles.btn}
+          >
             <Text style={styles.btnText}>.</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={onPress} style={styles.customBtn}>
+          <TouchableOpacity
+            onPress={() => updateCalc("=")}
+            style={styles.customBtn}
+          >
             <Text style={styles.customText}>=</Text>
           </TouchableOpacity>
         </View>
