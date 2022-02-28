@@ -5,10 +5,18 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Switch,
 } from "react-native";
+import BasicCalculator from "./src/screens/BasicCalculator";
+import DrugCalculator from "./src/screens/DrugCalculator";
 import { windowHeight, windowWidth } from "./src/utils/Dimensions";
 
 const App = () => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+  };
+
   const [result, setResult] = useState(0);
   const [calculation, setCalculation] = useState<any>("");
   const operations = ["+", "-", "×", "÷"];
@@ -74,106 +82,16 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.valueBox}>
-        <Text style={styles.calcularText}>{calculation}</Text>
-        <Text style={styles.resultText}>{result}</Text>
+      <View style={styles.switchBox}>
+        <Switch
+          trackColor={{ false: "#767577", true: "#fffff" }}
+          thumbColor={isEnabled ? "#d9964a" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
       </View>
-      <View style={styles.btnBox}>
-        <View style={styles.btnRow}>
-          <TouchableOpacity
-            onPress={() => updateOperation("AC")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>AC</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("C")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>C</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("%")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>%</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("÷")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>÷</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnRow}>
-          <TouchableOpacity onPress={() => updateCalc(7)} style={styles.btn}>
-            <Text style={styles.btnText}>7</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(8)} style={styles.btn}>
-            <Text style={styles.btnText}>8</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(9)} style={styles.btn}>
-            <Text style={styles.btnText}>9</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("×")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>×</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnRow}>
-          <TouchableOpacity onPress={() => updateCalc(4)} style={styles.btn}>
-            <Text style={styles.btnText}>4</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(5)} style={styles.btn}>
-            <Text style={styles.btnText}>5</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(6)} style={styles.btn}>
-            <Text style={styles.btnText}>6</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("-")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>-</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnRow}>
-          <TouchableOpacity onPress={() => updateCalc(1)} style={styles.btn}>
-            <Text style={styles.btnText}>1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(2)} style={styles.btn}>
-            <Text style={styles.btnText}>2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => updateCalc(3)} style={styles.btn}>
-            <Text style={styles.btnText}>3</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation("+")}
-            style={styles.btn}
-          >
-            <Text style={styles.wordText}>+</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btnRow}>
-          <TouchableOpacity onPress={() => updateCalc("0")} style={styles.btn}>
-            <Text style={styles.btnText}>0</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateOperation(".")}
-            style={styles.btn}
-          >
-            <Text style={styles.btnText}>.</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => updateCalc("=")}
-            style={styles.customBtn}
-          >
-            <Text style={styles.customText}>=</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {isEnabled ? <BasicCalculator /> : <DrugCalculator />}
     </SafeAreaView>
   );
 };
@@ -183,7 +101,16 @@ const styles = StyleSheet.create({
     flex: 2,
     width: windowWidth,
     height: windowHeight,
-    backgroundColor: "#243441",
+    backgroundColor: "#373ad4",
+  },
+  switchBox: {
+    flex: 0.1,
+    padding: 10,
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  body: {
+    flex: 1.9,
   },
   calcularText: {
     alignSelf: "flex-end",
@@ -212,7 +139,7 @@ const styles = StyleSheet.create({
   },
   wordText: {
     fontSize: 25,
-    color: "#ff4429",
+    color: "#d9964a",
   },
   btnText: {
     fontSize: 25,
@@ -229,7 +156,7 @@ const styles = StyleSheet.create({
   },
   valueBox: {
     justifyContent: "flex-end",
-    flex: 0.8,
+    flex: 0.7,
     padding: 10,
   },
   customBtn: {
@@ -239,12 +166,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 25,
     borderRadius: 10,
-    backgroundColor: "#ff4429",
+    backgroundColor: "#d9964a",
   },
   customText: {
     fontSize: 25,
     color: "#f9f9f9",
   },
 });
-
 export default App;
