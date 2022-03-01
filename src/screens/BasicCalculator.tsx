@@ -67,7 +67,7 @@ const BasicCalculator = ({ navigation }: any) => {
   };
 
   return (
-    <View style={styles.body}>
+    <View style={styles.container}>
       <View style={styles.valueBox}>
         <Text style={styles.calcularText}>{calculation}</Text>
         <Text style={styles.resultText}>{result}</Text>
@@ -174,19 +174,10 @@ const BasicCalculator = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1.9,
     width: windowWidth,
     height: windowHeight,
     backgroundColor: "#373ad4",
-  },
-  switchBox: {
-    flex: 0.1,
-    padding: 10,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-  },
-  body: {
-    flex: 1.9,
   },
   calcularText: {
     alignSelf: "flex-end",
