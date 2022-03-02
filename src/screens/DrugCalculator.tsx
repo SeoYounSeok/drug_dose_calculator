@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
+import RNPickerSelect from "react-native-picker-select";
 
 const DrugCalculator = () => {
   const [milliliter, setMilliliter] = useState("");
   const [selectDoseUnit, setSelectDoseUnit] = useState();
-  const [selectTimeUnit, setSelectTimeUnit] = useState("min");
+  const [selectTimeUnit, setSelectTimeUnit] = useState();
 
   const [weight, setWeight] = useState("");
   const [selectWeight, setSelectWeight] = useState("kg");
@@ -24,7 +25,7 @@ const DrugCalculator = () => {
   const [dropPerMinute, setDropPerMinute] = useState("");
   const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState("cc/hr");
 
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [result, setResult] = useState();
 
   // denominator 분모, numerator 분자
   return (
@@ -36,41 +37,126 @@ const DrugCalculator = () => {
           style={styles.input}
           value={milliliter}
           onChangeText={(unit) => setMilliliter(unit)}
-          placeholder="just input number"
+          placeholder=""
           keyboardType="numeric"
         />
-        <Text>123</Text>
-
-        <Text style={styles.subtitle}>/kg</Text>
+        <RNPickerSelect
+          onValueChange={(value) => {
+            setSelectDoseUnit(value);
+            console.log(selectDoseUnit);
+          }}
+          value={selectDoseUnit}
+          placeholder={{ label: "ng", value: "ng" }}
+          items={[
+            { label: "mcg", value: "mcg" },
+            { label: "mg", value: "mg" },
+            { label: "grams", value: "grams" },
+          ]}
+        />
+        <Text style={styles.subtitle}>/ kg </Text>
+        <RNPickerSelect
+          onValueChange={(value) => {
+            setSelectTimeUnit(value);
+            console.log(selectTimeUnit);
+          }}
+          value={selectTimeUnit}
+          placeholder={{ label: "min", value: "min" }}
+          items={[
+            { label: "hr", value: "hr" },
+            { label: "day", value: "day" },
+          ]}
+        />
       </View>
       <View style={styles.row}>
-        <Text style={styles.subtitle}>W</Text>
+        <Text style={styles.subtitle}>Weight : </Text>
         <TextInput
           style={styles.input}
           value={milliliter}
           onChangeText={(unit) => setMilliliter(unit)}
-          placeholder="just input number"
           keyboardType="numeric"
+        />
+        <RNPickerSelect
+          onValueChange={(value) => {
+            setSelectTimeUnit(value);
+            console.log(selectTimeUnit);
+          }}
+          value={selectTimeUnit}
+          placeholder={{ label: "mg", value: "mg" }}
+          items={[
+            { label: "mcg", value: "mcg" },
+            { label: "grams", value: "grams" },
+            { label: "units", value: "units" },
+            { label: "nanograms", value: "nanograms" },
+          ]}
         />
       </View>
       <View style={styles.row}>
-        <Text style={styles.subtitle}>약물 용량 계산기</Text>
-        <TextInput
-          style={styles.input}
-          value={milliliter}
-          onChangeText={(unit) => setMilliliter(unit)}
-          placeholder="just input number"
-          keyboardType="numeric"
-        />
+        <Text style={styles.subtitle}>Concentration : </Text>
+        <View>
+          <View style={styles.row}>
+            <TextInput
+              style={styles.input}
+              value={milliliter}
+              onChangeText={(unit) => setMilliliter(unit)}
+              keyboardType="numeric"
+            />
+            <RNPickerSelect
+              onValueChange={(value) => {
+                setSelectTimeUnit(value);
+                console.log(selectTimeUnit);
+              }}
+              value={selectTimeUnit}
+              placeholder={{ label: "cc", value: "cc" }}
+              items={[{ label: "liters", value: "liters" }]}
+            />
+          </View>
+          <Text>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</Text>
+          <View style={styles.row}>
+            <TextInput
+              style={styles.input}
+              value={milliliter}
+              onChangeText={(unit) => setMilliliter(unit)}
+              keyboardType="numeric"
+            />
+            <RNPickerSelect
+              onValueChange={(value) => {
+                setSelectTimeUnit(value);
+                console.log(selectTimeUnit);
+              }}
+              value={selectTimeUnit}
+              placeholder={{ label: "kg", value: "kg" }}
+              items={[
+                { label: "grams", value: "grams" },
+                { label: "lbs", value: "lbs" },
+              ]}
+            />
+          </View>
+        </View>
       </View>
       <View style={styles.row}>
         <TouchableOpacity>
-          <Text>123456</Text>
+          <Text>Calculate</Text>
         </TouchableOpacity>
 
         <TouchableOpacity>
-          <Text>123456</Text>
+          <Text>초기화</Text>
         </TouchableOpacity>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.subtitle}>IV Rate : </Text>
+        <Text style={styles.subtitle}>{result}</Text>
+        <RNPickerSelect
+          onValueChange={(value) => {
+            setSelectTimeUnit(value);
+            console.log(selectTimeUnit);
+          }}
+          value={selectTimeUnit}
+          placeholder={{ label: "cc/hr", value: "cc/hr" }}
+          items={[
+            { label: "cc/min", value: "cc/min" },
+            { label: "cc/dat", value: "cc/day" },
+          ]}
+        />
       </View>
     </View>
   );
@@ -92,13 +178,15 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     fontSize: 30,
+    marginBottom: 30,
   },
   subtitle: {
     textAlign: "center",
     fontSize: 20,
   },
   input: {
-    height: 40,
+    height: 30,
+    width: 70,
     margin: 12,
     borderWidth: 1,
     padding: 10,
