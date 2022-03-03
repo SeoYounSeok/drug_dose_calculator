@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -22,29 +22,27 @@ const DrugCalculator = () => {
   const [denominator, setDenominator] = useState("");
   const [selectDenominator, setSelectDenominator] = useState("mg");
 
-  const [dropPerMinute, setDropPerMinute] = useState();
+  const [dropPerMinute, setDropPerMinute] = useState("");
   const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState("cc/hr");
-
   // denominator 분모, numerator 분자
+
+  useEffect(() => {
+    if (
+      milliliter != "" &&
+      weight != "" &&
+      numerator != "" &&
+      denominator != ""
+    ) {
+      const result: number =
+        (Number(milliliter) * Number(weight) * 60) /
+        (Number(numerator) / Number(denominator));
+      setDropPerMinute(result.toString());
+    }
+  }, [milliliter, weight, denominator, numerator]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MEDCALC : 약물 용량 계산기</Text>
-      <View>
-        <RNPickerSelect
-          textInputProps={{ underlineColorAndroid: "transparent" }}
-          onValueChange={(value) => {
-            setSelectDoseUnit(value);
-            console.log(selectDoseUnit);
-          }}
-          value={selectDoseUnit}
-          placeholder={{ label: "ng", value: "ng" }}
-          items={[
-            { label: "mcg", value: "mcg" },
-            { label: "mg", value: "mg" },
-            { label: "grams", value: "grams" },
-          ]}
-        />
-      </View>
       <View style={styles.row}>
         <Text style={styles.subtitle}>Dose : </Text>
         <TextInput
