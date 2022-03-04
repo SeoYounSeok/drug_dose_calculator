@@ -10,33 +10,27 @@ import { windowHeight, windowWidth } from "../utils/Dimensions";
 import RNPickerSelect from "react-native-picker-select";
 
 const DrugCalculator = () => {
-  const [milliliter, setMilliliter] = useState("");
+  const [milliliter, setMilliliter] = useState<number>(0);
   const [selectDoseUnit, setSelectDoseUnit] = useState();
   const [selectTimeUnit, setSelectTimeUnit] = useState();
 
-  const [weight, setWeight] = useState("");
+  const [weight, setWeight] = useState<number>(0);
   const [selectWeight, setSelectWeight] = useState("kg");
 
-  const [numerator, setNumerator] = useState("");
+  const [numerator, setNumerator] = useState<number>(0);
   const [selectNumerator, setSelectNumerator] = useState("cc");
-  const [denominator, setDenominator] = useState("");
+  const [denominator, setDenominator] = useState<number>(0);
   const [selectDenominator, setSelectDenominator] = useState("mg");
 
-  const [dropPerMinute, setDropPerMinute] = useState("");
+  const [dropPerMinute, setDropPerMinute] = useState<number>(0);
   const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState("cc/hr");
   // denominator 분모, numerator 분자
 
   useEffect(() => {
-    if (
-      milliliter != "" &&
-      weight != "" &&
-      numerator != "" &&
-      denominator != ""
-    ) {
-      const result: number =
-        (Number(milliliter) * Number(weight) * 60) /
-        (Number(numerator) / Number(denominator));
-      setDropPerMinute(result.toString());
+    const result: number =
+      (milliliter * weight * 60) / (numerator / denominator);
+    {
+      !result ? setDropPerMinute(0) : setDropPerMinute(result);
     }
   }, [milliliter, weight, denominator, numerator]);
 
@@ -47,8 +41,8 @@ const DrugCalculator = () => {
         <Text style={styles.subtitle}>Dose : </Text>
         <TextInput
           style={styles.input}
-          value={milliliter}
-          onChangeText={(unit) => setMilliliter(unit)}
+          value={milliliter.toString()}
+          onChangeText={(unit) => setMilliliter(Number(unit))}
           placeholder=""
           keyboardType="numeric"
         />
@@ -84,8 +78,8 @@ const DrugCalculator = () => {
         <Text style={styles.subtitle}>Weight : </Text>
         <TextInput
           style={styles.input}
-          value={weight}
-          onChangeText={(unit) => setWeight(unit)}
+          value={weight.toString()}
+          onChangeText={(unit) => setWeight(Number(unit))}
           keyboardType="numeric"
         />
         <RNPickerSelect
@@ -109,8 +103,8 @@ const DrugCalculator = () => {
           <View style={styles.row}>
             <TextInput
               style={styles.input}
-              value={numerator}
-              onChangeText={(unit) => setNumerator(unit)}
+              value={numerator.toString()}
+              onChangeText={(unit) => setNumerator(Number(unit))}
               keyboardType="numeric"
             />
             <RNPickerSelect
@@ -121,14 +115,15 @@ const DrugCalculator = () => {
               value={selectNumerator}
               placeholder={{ label: "cc", value: "cc" }}
               items={[{ label: "liters", value: "liters" }]}
+              style={pickerSelectStyles}
             />
           </View>
           <Text>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</Text>
           <View style={styles.row}>
             <TextInput
               style={styles.input}
-              value={denominator}
-              onChangeText={(unit) => setDenominator(unit)}
+              value={denominator.toString()}
+              onChangeText={(unit) => setDenominator(Number(unit))}
               keyboardType="numeric"
             />
             <RNPickerSelect
@@ -202,6 +197,30 @@ const styles = StyleSheet.create({
     width: 70,
     margin: 12,
     borderWidth: 1,
+    padding: 10,
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    margin: 12,
+    fontSize: 16,
+    height: 40,
+    width: 70,
+    color: "#000000",
+    borderColor: "#000000",
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 10,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    height: 50,
+    width: 300,
+    color: "#000000",
+    borderColor: "#000000",
+    borderWidth: 1,
+    borderRadius: 12,
     padding: 10,
   },
 });
