@@ -11,19 +11,19 @@ import RNPickerSelect from "react-native-picker-select";
 
 const DrugCalculator = () => {
   const [milliliter, setMilliliter] = useState<number>(0);
-  const [selectDoseUnit, setSelectDoseUnit] = useState();
-  const [selectTimeUnit, setSelectTimeUnit] = useState();
+  const [selectDoseUnit, setSelectDoseUnit] = useState<string>("");
+  const [selectTimeUnit, setSelectTimeUnit] = useState<string>("");
 
   const [weight, setWeight] = useState<number>(0);
-  const [selectWeight, setSelectWeight] = useState("kg");
+  const [selectWeight, setSelectWeight] = useState<string>("");
 
   const [numerator, setNumerator] = useState<number>(0);
-  const [selectNumerator, setSelectNumerator] = useState("cc");
+  const [selectNumerator, setSelectNumerator] = useState<string>("");
   const [denominator, setDenominator] = useState<number>(0);
-  const [selectDenominator, setSelectDenominator] = useState("mg");
+  const [selectDenominator, setSelectDenominator] = useState<string>("");
 
   const [dropPerMinute, setDropPerMinute] = useState<number>(0);
-  const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState("cc/hr");
+  const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState<string>("");
   // denominator 분모, numerator 분자
 
   useEffect(() => {
@@ -39,40 +39,56 @@ const DrugCalculator = () => {
       <Text style={styles.title}>MEDCALC : 약물 용량 계산기</Text>
       <View style={styles.row}>
         <Text style={styles.subtitle}>Dose : </Text>
-        <TextInput
-          style={styles.input}
-          value={milliliter.toString()}
-          onChangeText={(unit) => setMilliliter(Number(unit))}
-          placeholder=""
-          keyboardType="numeric"
-        />
-        <RNPickerSelect
-          textInputProps={{ underlineColorAndroid: "transparent" }}
-          onValueChange={(value) => {
-            setSelectDoseUnit(value);
-            console.log(selectDoseUnit);
-          }}
-          value={selectDoseUnit}
-          placeholder={{ label: "ng", value: "ng" }}
-          items={[
-            { label: "mcg", value: "mcg" },
-            { label: "mg", value: "mg" },
-            { label: "grams", value: "grams" },
-          ]}
-        />
-        <Text style={styles.subtitle}>/ kg </Text>
-        <RNPickerSelect
-          onValueChange={(value) => {
-            setSelectTimeUnit(value);
-            console.log(selectTimeUnit);
-          }}
-          value={selectTimeUnit}
-          placeholder={{ label: "min", value: "min" }}
-          items={[
-            { label: "hr", value: "hr" },
-            { label: "day", value: "day" },
-          ]}
-        />
+        <View>
+          <View style={styles.row}>
+            <TextInput
+              style={styles.input}
+              value={milliliter.toString()}
+              onChangeText={(unit) => setMilliliter(Number(unit))}
+              placeholder=""
+              keyboardType="numeric"
+            />
+            <RNPickerSelect
+              textInputProps={{ underlineColorAndroid: "transparent" }}
+              onValueChange={(value) => {
+                setSelectDoseUnit(value);
+                console.log(selectDoseUnit);
+              }}
+              value={selectDoseUnit}
+              placeholder={{ label: "단위", value: "" }}
+              items={[
+                { label: "ng/kg", value: "ng/kg" },
+                { label: "mcg/kg", value: "mcg/kg" },
+                { label: "mg/kg", value: "mg/kg" },
+                { label: "grams/kg", value: "grams/kg" },
+              ]}
+              style={pickerSelectStyles}
+            />
+          </View>
+          <Text>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</Text>
+          <View style={styles.row}>
+            <TextInput
+              style={styles.input}
+              value="1"
+              editable={false}
+              keyboardType="numeric"
+            />
+            <RNPickerSelect
+              onValueChange={(value) => {
+                setSelectTimeUnit(value);
+                console.log(selectTimeUnit);
+              }}
+              value={selectTimeUnit}
+              placeholder={{ label: "단위", value: "" }}
+              items={[
+                { label: "min", value: "min" },
+                { label: "hr", value: "hr" },
+                { label: "day", value: "day" },
+              ]}
+              style={pickerSelectStyles}
+            />
+          </View>
+        </View>
       </View>
       <View style={styles.row}>
         <Text style={styles.subtitle}>Weight : </Text>
@@ -88,13 +104,15 @@ const DrugCalculator = () => {
             console.log(selectWeight);
           }}
           value={selectWeight}
-          placeholder={{ label: "mg", value: "mg" }}
+          placeholder={{ label: "단위", value: "" }}
           items={[
             { label: "mcg", value: "mcg" },
+            { label: "mg", value: "mg" },
             { label: "grams", value: "grams" },
             { label: "units", value: "units" },
             { label: "nanograms", value: "nanograms" },
           ]}
+          style={pickerSelectStyles}
         />
       </View>
       <View style={styles.row}>
@@ -113,8 +131,11 @@ const DrugCalculator = () => {
                 console.log(selectNumerator);
               }}
               value={selectNumerator}
-              placeholder={{ label: "cc", value: "cc" }}
-              items={[{ label: "liters", value: "liters" }]}
+              placeholder={{ label: "단위", value: "" }}
+              items={[
+                { label: "cc", value: "cc" },
+                { label: "liters", value: "liters" },
+              ]}
               style={pickerSelectStyles}
             />
           </View>
@@ -132,11 +153,13 @@ const DrugCalculator = () => {
                 console.log(selectDenominator);
               }}
               value={selectDenominator}
-              placeholder={{ label: "kg", value: "kg" }}
+              placeholder={{ label: "단위", value: "" }}
               items={[
+                { label: "kg", value: "kg" },
                 { label: "grams", value: "grams" },
                 { label: "lbs", value: "lbs" },
               ]}
+              style={pickerSelectStyles}
             />
           </View>
         </View>
@@ -152,18 +175,20 @@ const DrugCalculator = () => {
       </View>
       <View style={styles.row}>
         <Text style={styles.subtitle}>IV Rate : </Text>
-        <Text style={styles.subtitle}>{dropPerMinute}</Text>
+        <Text>{dropPerMinute}</Text>
         <RNPickerSelect
           onValueChange={(value) => {
             setDropPerMinuteUnit(value);
             console.log(dropPerMinuteUnit);
           }}
           value={dropPerMinuteUnit}
-          placeholder={{ label: "cc/hr", value: "cc/hr" }}
+          placeholder={{ label: "단위", value: "" }}
           items={[
+            { label: "cc/hr", value: "cc/hr" },
             { label: "cc/min", value: "cc/min" },
             { label: "cc/dat", value: "cc/day" },
           ]}
+          style={pickerSelectStyles}
         />
       </View>
     </View>
@@ -214,9 +239,10 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
   },
   inputAndroid: {
+    marginTop: 5,
     fontSize: 16,
-    height: 50,
-    width: 300,
+    height: 40,
+    width: 150,
     color: "#000000",
     borderColor: "#000000",
     borderWidth: 1,
