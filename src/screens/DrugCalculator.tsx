@@ -27,27 +27,79 @@ const DrugCalculator = () => {
   // denominator 분모, numerator 분자
 
   useEffect(() => {
+    let result: number =
+      (milliliter * weight * 60) / ((numerator / denominator) * 1000);
+    if (
+      selectDoseUnit == "" ||
+      selectTimeUnit == "" ||
+      selectWeight == "" ||
+      selectNumerator == "" ||
+      selectDenominator == "" ||
+      dropPerMinuteUnit == "" ||
+      !result
+    ) {
+      setDropPerMinute(0);
+      return;
+    }
     {
-      selectDoseUnit == ""
-        ? null
-        : selectDoseUnit == "ng/kg"
-        ? setDropPerMinute(dropPerMinute * 1)
+      selectDoseUnit == "ng/kg"
+        ? (result /= 1000)
         : selectDoseUnit == "mcg/kg"
-        ? setDropPerMinute(dropPerMinute * 1000)
+        ? (result *= 1)
         : selectDoseUnit == "mg/kg"
-        ? setDropPerMinute(dropPerMinute * 1000000)
+        ? (result *= 1000)
         : selectDoseUnit == "grams/kg"
-        ? setDropPerMinute(dropPerMinute * 1000000000)
+        ? (result *= 1000000)
         : null;
     }
-  }, [selectDoseUnit]);
-
-  useEffect(() => {
-    const result: number =
-      (milliliter * weight * 60) / (numerator / denominator);
     {
-      !result ? setDropPerMinute(0) : setDropPerMinute(result);
+      selectTimeUnit == "min"
+        ? (result *= 1)
+        : selectTimeUnit == "hr"
+        ? (result /= 60)
+        : selectTimeUnit == "day"
+        ? (result /= 1440)
+        : null;
     }
+    {
+      selectWeight == "kg"
+        ? (result *= 1)
+        : selectWeight == "grams"
+        ? (result /= 1000)
+        : selectWeight == "lbs"
+        ? (result *= 0.45359237)
+        : null;
+    }
+    {
+      selectNumerator == "mcg"
+        ? (result *= 1000)
+        : selectNumerator == "mg"
+        ? (result *= 1)
+        : selectNumerator == "grams"
+        ? (result /= 1000)
+        : selectNumerator == "units"
+        ? (result *= 1)
+        : selectNumerator == "nanograms"
+        ? (result *= 1000000)
+        : null;
+    }
+    {
+      selectDenominator == "cc"
+        ? (result *= 1)
+        : selectDenominator == "liters"
+        ? (result *= 1000)
+        : null;
+    }
+    {
+      dropPerMinuteUnit == "cc/hr"
+        ? (result *= 1)
+        : dropPerMinuteUnit == "cc/min"
+        ? (result /= 60)
+        : dropPerMinuteUnit == "cc/day"
+        ? (result *= 24)
+        : null;
+    }
+    setDropPerMinute(result);
   }, [
     milliliter,
     weight,
@@ -204,7 +256,7 @@ const DrugCalculator = () => {
           items={[
             { label: "cc/hr", value: "cc/hr" },
             { label: "cc/min", value: "cc/min" },
-            { label: "cc/dat", value: "cc/day" },
+            { label: "cc/day", value: "cc/day" },
           ]}
           style={pickerSelectStyles}
         />
