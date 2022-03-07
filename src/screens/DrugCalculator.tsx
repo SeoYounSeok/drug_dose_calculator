@@ -116,6 +116,14 @@ const DrugCalculator = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MEDCALC : 약물 용량 계산기</Text>
+      <View style={styles.btnRow}>
+        <TouchableOpacity>
+          <Text style={styles.btnTitle}>단위 설명서</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.btnTitle}>수식 설명서</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.row}>
         <Text style={styles.subtitle}>Dose : </Text>
         <View>
@@ -144,7 +152,13 @@ const DrugCalculator = () => {
               style={pickerSelectStyles}
             />
           </View>
-          <Text>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</Text>
+          <Text
+            style={{
+              width: windowWidth * 0.5,
+              height: 0.5,
+              borderWidth: 1,
+            }}
+          ></Text>
           <View style={styles.row}>
             <TextInput
               style={styles.input}
@@ -219,7 +233,13 @@ const DrugCalculator = () => {
               style={pickerSelectStyles}
             />
           </View>
-          <Text>ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ</Text>
+          <Text
+            style={{
+              width: windowWidth * 0.5,
+              height: 1,
+              borderWidth: 1,
+            }}
+          ></Text>
           <View style={styles.row}>
             <TextInput
               style={styles.input}
@@ -244,7 +264,7 @@ const DrugCalculator = () => {
         </View>
       </View>
       <View style={styles.row}>
-        <Text style={styles.subtitle}>IV Rate : </Text>
+        <Text style={styles.resultTitle}>IV Rate : </Text>
         <Text style={styles.input}>{dropPerMinute}</Text>
         <RNPickerSelect
           onValueChange={(value) => {
@@ -272,11 +292,16 @@ const styles = StyleSheet.create({
     height: windowHeight,
     backgroundColor: "#f9f9f9",
     alignContent: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
   },
   row: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  btnRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
   },
   title: {
     textAlign: "center",
@@ -286,6 +311,23 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: "center",
     fontSize: 20,
+    width: windowWidth / 2.5,
+  },
+  btnTitle: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    borderColor: "blue",
+    borderWidth: 2,
+    padding: 8,
+    backgroundColor: "blue",
+    color: "#ffffff",
+  },
+  resultTitle: {
+    textAlign: "center",
+    fontSize: 25,
+    color: "blue",
+    width: windowWidth / 2.5,
   },
   input: {
     height: 40,
