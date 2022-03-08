@@ -5,9 +5,14 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Button,
+  SafeAreaView,
 } from "react-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import RNPickerSelect from "react-native-picker-select";
+import Modal from "react-native-modal";
+import UnitModal from "./modals/UnitModal";
+import MathModal from "./modals/MathModal";
 
 const DrugCalculator = () => {
   const [milliliter, setMilliliter] = useState<number>(0);
@@ -24,8 +29,17 @@ const DrugCalculator = () => {
 
   const [dropPerMinute, setDropPerMinute] = useState<number>(0);
   const [dropPerMinuteUnit, setDropPerMinuteUnit] = useState<string>("");
-  // denominator 분모, numerator 분자
 
+  const [isUnitModalVisible, setUnitModalVisible] = useState(false);
+  const [isMathModalVisible, setMathModalVisible] = useState(false);
+
+  const toggleUnitModal = () => {
+    setUnitModalVisible(!isUnitModalVisible);
+  };
+
+  const toggleMathModal = () => {
+    setMathModalVisible(!isMathModalVisible);
+  };
   useEffect(() => {
     let result: number =
       (milliliter * weight * 60) / ((numerator / denominator) * 1000);
@@ -117,12 +131,28 @@ const DrugCalculator = () => {
     <View style={styles.container}>
       <Text style={styles.title}>MEDCALC : 약물 용량 계산기</Text>
       <View style={styles.btnRow}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggleUnitModal}>
           <Text style={styles.btnTitle}>단위 설명서</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <Modal isVisible={isUnitModalVisible}>
+          <View style={{ backgroundColor: "#ffffff" }}>
+            <UnitModal />
+            <TouchableOpacity onPress={toggleUnitModal}>
+              <Text style={styles.btnTitle}>닫기</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+        <TouchableOpacity onPress={toggleMathModal}>
           <Text style={styles.btnTitle}>수식 설명서</Text>
         </TouchableOpacity>
+        <Modal isVisible={isMathModalVisible}>
+          <SafeAreaView style={{ backgroundColor: "#ffffff" }}>
+            <MathModal />
+            <TouchableOpacity onPress={toggleMathModal}>
+              <Text style={styles.btnTitle}>닫기</Text>
+            </TouchableOpacity>
+          </SafeAreaView>
+        </Modal>
       </View>
       <View style={styles.row}>
         <Text style={styles.subtitle}>Dose : </Text>
@@ -139,7 +169,6 @@ const DrugCalculator = () => {
               textInputProps={{ underlineColorAndroid: "transparent" }}
               onValueChange={(value) => {
                 setSelectDoseUnit(value);
-                console.log(selectDoseUnit);
               }}
               value={selectDoseUnit}
               placeholder={{ label: "단위", value: "" }}
@@ -169,7 +198,6 @@ const DrugCalculator = () => {
             <RNPickerSelect
               onValueChange={(value) => {
                 setSelectTimeUnit(value);
-                console.log(selectTimeUnit);
               }}
               value={selectTimeUnit}
               placeholder={{ label: "단위", value: "" }}
@@ -194,7 +222,6 @@ const DrugCalculator = () => {
         <RNPickerSelect
           onValueChange={(value) => {
             setSelectDenominator(value);
-            console.log(selectDenominator);
           }}
           value={selectDenominator}
           placeholder={{ label: "단위", value: "" }}
@@ -219,7 +246,6 @@ const DrugCalculator = () => {
             <RNPickerSelect
               onValueChange={(value) => {
                 setSelectWeight(value);
-                console.log(selectWeight);
               }}
               value={selectWeight}
               placeholder={{ label: "단위", value: "" }}
@@ -250,7 +276,6 @@ const DrugCalculator = () => {
             <RNPickerSelect
               onValueChange={(value) => {
                 setSelectNumerator(value);
-                console.log(selectNumerator);
               }}
               value={selectNumerator}
               placeholder={{ label: "단위", value: "" }}
@@ -269,7 +294,6 @@ const DrugCalculator = () => {
         <RNPickerSelect
           onValueChange={(value) => {
             setDropPerMinuteUnit(value);
-            console.log(dropPerMinuteUnit);
           }}
           value={dropPerMinuteUnit}
           placeholder={{ label: "단위", value: "" }}
